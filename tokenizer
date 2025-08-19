@@ -1,25 +1,18 @@
 import nltk
-import re
+from nltk.tokenize import word_tokenize, TreebankWordTokenizer
 
-# Sample function to tokenize text relevant to tech context
-def tech_tokenizer(text):
-    # Regex pattern: Match URLs, code snippets in backticks, numbers, words, and punctuation
-    pattern = r"""
-        (?P<URL>https?://[^\s]+)             # URLs
-        |(?P<CODE>`[^`]+?`)                  # Inline code in backticks
-        |(?P<WORD>\b\w[\w\-\./]*\w\b)        # Words (with hyphens, slashes, periods)
-        |(?P<NUM>\b\d+\b)                    # Numbers
-        |(?P<PUNC>[.,!?;(){}[\]:])           # Punctuation
-    """
-    # Use NLTK's regexp_tokenize with the custom pattern
-    tokens = nltk.regexp_tokenize(text, pattern, flags=re.VERBOSE)
-    return tokens
+# Make sure NLTK's 'punkt' data is downloaded
+nltk.download('punkt')
 
-# Example usage
-sample_text = """
-Python is widely used for web development. Visit https://docs.python.org/3 for docs!
-In C++, use `std::vector<int>` for dynamic arrays. Email: user@example.com
-"""
+medical_text = "Patient presents with BP 130/85. Prescribed 5mg of Lisinopril daily."
 
-tokens = tech_tokenizer(sample_text)
+# Basic word tokenization
+tokens = word_tokenize(medical_text)
 print(tokens)
+# Output: ['Patient', 'presents', 'with', 'BP', '130/85', '.', 'Prescribed', '5mg', 'of', 'Lisinopril', 'daily', '.']
+
+# Treebank tokenizer (handles more punctuation, abbreviations, contractions)
+tokenizer = TreebankWordTokenizer()
+treebank_tokens = tokenizer.tokenize(medical_text)
+print(treebank_tokens)
+# Output: ['Patient', 'presents', 'with', 'BP', '130/85.', 'Prescribed', '5mg', 'of', 'Lisinopril', 'daily', '.']
